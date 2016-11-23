@@ -30,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
     // TODO Make them empty. Just for debug.
-//    private String latitude = "40.703321957188955";
-//    private String longitude = "-73.99287114236125";
-    private String latitude = "";
-    private String longitude = "";
+    private String latitude = "40.703321957188955";
+    private String longitude = "-73.99287114236125";
+//    private String latitude = "";
+//    private String longitude = "";
 
     private boolean clicked = false;
 

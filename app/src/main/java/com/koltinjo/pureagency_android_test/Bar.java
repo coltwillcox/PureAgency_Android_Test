@@ -7,6 +7,8 @@ package com.koltinjo.pureagency_android_test;
 public class Bar {
 
     private String name;
+    private String address;
+    private String image;
     private double latitude;
     private double longitude;
 
@@ -14,8 +16,10 @@ public class Bar {
 
     }
 
-    public Bar(String name, double latitude, double longitude) {
+    public Bar(String name, String address, String image, double latitude, double longitude) {
         this.name = name;
+        this.address = address;
+        this.image = image;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -42,6 +46,22 @@ public class Bar {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
 }

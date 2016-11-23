@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.ListView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,10 +41,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private String categoryId = "4bf58dd8d48988d116941735";
     private String version = "20140806";
 
-    String urlFull;
-    String jsonString = "";
-    ArrayList<Bar> bars;
-
+    private ListView listView;
+    private String urlFull;
+    private String jsonString = "";
+    private ArrayList<Bar> bars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        listView = (ListView) findViewById(R.id.listView);
         urlFull = getIntent().getExtras().getString("urlFull");
         latitude = getIntent().getExtras().getString("latitude");
         longitude = getIntent().getExtras().getString("longitude");
@@ -116,6 +118,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                             public void call(Object o) {
                                 parseJson();
                                 addMarkers();
+                                updateList();
                             }
                         },
                         new Action1<Throwable>() {
@@ -134,9 +137,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             for (int i = 0; i < venues.length(); i++) {
                 JSONObject venue = venues.getJSONObject(i);
                 String name = venue.getString("name");
+                String address = venue.getJSONObject("location").getString("address");
+                String image = ""; // TODO
                 double latitude = venue.getJSONObject("location").getDouble("lat");
                 double longitude = venue.getJSONObject("location").getDouble("lng");
-                bars.add(new Bar(name, latitude, longitude));
+                bars.add(new Bar(name, address, image, latitude, longitude));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -164,5 +169,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 }
             });
         }
+    }
+
+    private void updateList() {
+        listView.setAdapter(new BarAdapter(bars));
     }
 }
