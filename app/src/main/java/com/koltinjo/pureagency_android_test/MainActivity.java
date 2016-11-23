@@ -12,7 +12,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
-    // TODO Make them empty. Just for debug.
-    private String latitude = "40.703321957188955";
-    private String longitude = "-73.99287114236125";
-//    private String latitude = "";
-//    private String longitude = "";
+    // Just for debug.
+//    private String latitude = "40.703321957188955";
+//    private String longitude = "-73.99287114236125";
+    private String latitude = "";
+    private String longitude = "";
 
     private String searchQuery = "";
     private boolean clicked = false;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 latitude = String.valueOf(location.getLatitude());
                 longitude = String.valueOf(location.getLongitude());
                 textViewLatLon.setText(latitude + " - " + longitude);
-                if (clicked) {
+                if (clicked && !latitude.isEmpty() && !longitude.isEmpty()) {
                     startMapActivity();
                 }
             }

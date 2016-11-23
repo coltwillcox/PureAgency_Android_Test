@@ -5,9 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.ListView;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,10 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -83,9 +78,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                                 "&categoryId=" + categoryId +
                                 "&v=" + version +
                                 "&query=" + searchQuery;
-//                        Date cDate = new Date();
-//                        String urlDate = new SimpleDateFormat("yyyyMMdd").format(cDate);
-//                        String urlFull = urlStart + urlDate;
                         try {
                             // Step 1: Get JSON document.
                             url = new URL(urlStart);
@@ -154,11 +146,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 String prefix = icon.getString("prefix");
                 String suffix = icon.getString("suffix");
                 String image = prefix + "64" + suffix;
-                String phone = venue.getJSONObject("contact").getString("formattedPhone");
-                String url = venue.getString("url");
+                String phone = "";
+                if (venue.getJSONObject("contact").has("formattedPhone")) {
+                    phone = venue.getJSONObject("contact").getString("formattedPhone");
+                }
+                String url = "";
+                if (venue.has("url")) {
+                    url = venue.getString("url");
+                }
                 String checkins = venue.getJSONObject("stats").getString("checkinsCount");
                 String hereNow = venue.getJSONObject("hereNow").getString("count");
-
                 double latitude = venue.getJSONObject("location").getDouble("lat");
                 double longitude = venue.getJSONObject("location").getDouble("lng");
                 bars.add(new Bar(name, address, image, phone, url, checkins, hereNow, latitude, longitude));
@@ -172,6 +169,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        LatLng marker = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        map.addMarker(new MarkerOptions().position(marker).title("Your position."));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 12));
         downloadData();
     }
 
@@ -220,15 +220,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                                 public void call(Object o) {
                                     Bitmap bitmap = (Bitmap) o;
                                     LatLng marker = new LatLng(latitude, longitude);
-                                    Log.d("oiram", "add");
                                     map.addMarker(
                                             new MarkerOptions()
                                                     .position(marker)
                                                     .title(name)
                                                     .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
                                     ).setTag(bar);
-
-                                    map.moveCamera(CameraUpdateFactory.newLatLng(marker));
                                     map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                         @Override
                                         public boolean onMarkerClick(Marker marker) {
