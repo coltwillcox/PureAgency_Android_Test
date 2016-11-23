@@ -34,6 +34,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private GoogleMap map;
     private String latitude;
     private String longitude;
+
+    private String clientId = "PWSM1K5Y4FPYRQNBN5VTV00TA5PBIRGNQ4GOX1BJOVIEH5RX";
+    private String clientSecret = "14CLKGBEMGHFAAC2W4UFJM3INJILSDTPEANMU3NYMJQAFRUH";
+    private String categoryId = "4bf58dd8d48988d116941735";
+    private String version = "20140806";
+
     String urlFull;
     String jsonString = "";
     ArrayList<Bar> bars;
@@ -62,13 +68,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         URL url;
                         HttpURLConnection connection = null;
 
-                        String urlStart = "https://api.foursquare.com/v2/venues/search?ll=" + latitude + "," + longitude + "&client_id=PWSM1K5Y4FPYRQNBN5VTV00TA5PBIRGNQ4GOX1BJOVIEH5RX&client_secret=14CLKGBEMGHFAAC2W4UFJM3INJILSDTPEANMU3NYMJQAFRUH&v=";
-                        Date cDate = new Date();
-                        String urlDate = new SimpleDateFormat("yyyyMMdd").format(cDate);
-                        String urlFull = urlStart + urlDate;
+                        String urlStart = "https://api.foursquare.com/v2/venues/search?ll=" + latitude + "," + longitude + "&client_id=" + clientId + "&client_secret=" + clientSecret + "&categoryId=" + categoryId + "&v=" + version;
+//                        Date cDate = new Date();
+//                        String urlDate = new SimpleDateFormat("yyyyMMdd").format(cDate);
+//                        String urlFull = urlStart + urlDate;
                         try {
-                            // Step 1: Get XML document.
-                            url = new URL(urlFull);
+                            // Step 1: Get JSON document.
+                            url = new URL(urlStart);
 
                             connection = (HttpURLConnection) url.openConnection();
                             connection.setConnectTimeout(5000);
