@@ -35,6 +35,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private GoogleMap map;
     private String latitude;
     private String longitude;
+    private String searchQuery;
 
     private String clientId = "PWSM1K5Y4FPYRQNBN5VTV00TA5PBIRGNQ4GOX1BJOVIEH5RX";
     private String clientSecret = "14CLKGBEMGHFAAC2W4UFJM3INJILSDTPEANMU3NYMJQAFRUH";
@@ -59,6 +60,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         urlFull = getIntent().getExtras().getString("urlFull");
         latitude = getIntent().getExtras().getString("latitude");
         longitude = getIntent().getExtras().getString("longitude");
+        searchQuery = getIntent().getExtras().getString("query");
         bars = new ArrayList<>();
     }
 
@@ -70,7 +72,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         URL url;
                         HttpURLConnection connection = null;
 
-                        String urlStart = "https://api.foursquare.com/v2/venues/search?ll=" + latitude + "," + longitude + "&client_id=" + clientId + "&client_secret=" + clientSecret + "&categoryId=" + categoryId + "&v=" + version;
+                        String urlStart = "https://api.foursquare.com/v2/venues/search?ll=" + latitude + "," + longitude +
+                                "&client_id=" + clientId +
+                                "&client_secret=" + clientSecret +
+                                "&categoryId=" + categoryId +
+                                "&v=" + version +
+                                "&query=" + searchQuery;
 //                        Date cDate = new Date();
 //                        String urlDate = new SimpleDateFormat("yyyyMMdd").format(cDate);
 //                        String urlFull = urlStart + urlDate;
@@ -138,7 +145,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 JSONObject venue = venues.getJSONObject(i);
                 String name = venue.getString("name");
                 String address = venue.getJSONObject("location").getString("address");
-                String image = ""; // TODO
+                JSONObject icon = venue.getJSONArray("categories").getJSONObject(0).getJSONObject("icon");
+                String prefix = icon.getString("prefix");
+                String suffix = icon.getString("suffix");
+                String image = prefix + "64" + suffix;
                 double latitude = venue.getJSONObject("location").getDouble("lat");
                 double longitude = venue.getJSONObject("location").getDouble("lng");
                 bars.add(new Bar(name, address, image, latitude, longitude));

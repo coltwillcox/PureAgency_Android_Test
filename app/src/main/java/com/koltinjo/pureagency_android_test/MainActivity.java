@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 //    private String latitude = "";
 //    private String longitude = "";
 
+    private String searchQuery = "";
     private boolean clicked = false;
 
     @Override
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 clicked = true;
-                String searchQuery = editTextSearch.getText().toString().trim();
+                searchQuery = editTextSearch.getText().toString().trim();
                 if (searchQuery.isEmpty()) {
                     searchQuery = "beer";
                 }
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("latitude", latitude);
         intent.putExtra("longitude", longitude);
+        intent.putExtra("query", searchQuery);
         startActivity(intent);
     }
 
