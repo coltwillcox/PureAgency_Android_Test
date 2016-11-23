@@ -51,8 +51,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         latitude = getIntent().getExtras().getString("latitude");
         longitude = getIntent().getExtras().getString("longitude");
         bars = new ArrayList<>();
-
-        downloadData();
     }
 
     private void downloadData() {
@@ -111,6 +109,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                             @Override
                             public void call(Object o) {
                                 parseJson();
+                                addMarkers();
                             }
                         },
                         new Action1<Throwable>() {
@@ -136,12 +135,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        addMarkers();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        addMarkers();
+        downloadData();
     }
 
     private void addMarkers() {
