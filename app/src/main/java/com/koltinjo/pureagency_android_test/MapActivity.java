@@ -1,14 +1,18 @@
 package com.koltinjo.pureagency_android_test;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.ListView;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -29,6 +33,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -171,23 +176,76 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     private void addMarkers() {
         for (final Bar bar : bars) {
-            LatLng marker = new LatLng(bar.getLatitude(), bar.getLongitude());
-            map.addMarker(new MarkerOptions().position(marker).title(bar.getName())).setTag(bar);
-            map.moveCamera(CameraUpdateFactory.newLatLng(marker));
-            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    Intent intent = new Intent(MapActivity.this, MarkerActivity.class);
-                    intent.putExtra("name", ((Bar) marker.getTag()).getName());
-                    intent.putExtra("address", ((Bar) marker.getTag()).getAddress());
-                    intent.putExtra("phone", ((Bar) marker.getTag()).getPhone());
-                    intent.putExtra("url", ((Bar) marker.getTag()).getUrl());
-                    intent.putExtra("checkins", ((Bar) marker.getTag()).getCheckins());
-                    intent.putExtra("herenow", ((Bar) marker.getTag()).getHereNow());
-                    startActivity(intent);
-                    return true;
-                }
-            });
+            final String image = bar.getImage();
+            final String name = bar.getName();
+            final double latitude = bar.getLatitude();
+            final double longitude = bar.getLongitude();
+            Single
+                    .create(new Single.OnSubscribe<SingleSubscriber>() {
+                        @Override
+                        public void call(SingleSubscriber singleSubscriber) {
+                            URL url;
+                            HttpURLConnection connection = null;
+                            Bitmap bitmap = null;
+
+                            try {
+                                url = new URL(image);
+
+                                connection = (HttpURLConnection) url.openConnection();
+                                connection.setConnectTimeout(5000);
+                                connection.setReadTimeout(5000);
+                                connection.setRequestMethod("GET");
+                                connection.connect();
+
+                                InputStream input = connection.getInputStream();
+                                bitmap = BitmapFactory.decodeStream(input);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (connection != null) {
+                                    connection.disconnect();
+                                }
+                                singleSubscriber.onSuccess(bitmap);
+                            }
+                        }
+                    })
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            new Action1<Object>() {
+                                @Override
+                                public void call(Object o) {
+                                    Bitmap bitmap = (Bitmap) o;
+                                    LatLng marker = new LatLng(latitude, longitude);
+                                    Log.d("oiram", "add");
+                                    map.addMarker(new MarkerOptions().position(marker).title(name).icon(
+                                            BitmapDescriptorFactory.fromBitmap(bitmap)
+                                    )).setTag(bar);
+
+                                    map.moveCamera(CameraUpdateFactory.newLatLng(marker));
+                                    map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                        @Override
+                                        public boolean onMarkerClick(Marker marker) {
+                                            Intent intent = new Intent(MapActivity.this, MarkerActivity.class);
+                                            intent.putExtra("name", ((Bar) marker.getTag()).getName());
+                                            intent.putExtra("address", ((Bar) marker.getTag()).getAddress());
+                                            intent.putExtra("phone", ((Bar) marker.getTag()).getPhone());
+                                            intent.putExtra("url", ((Bar) marker.getTag()).getUrl());
+                                            intent.putExtra("checkins", ((Bar) marker.getTag()).getCheckins());
+                                            intent.putExtra("herenow", ((Bar) marker.getTag()).getHereNow());
+                                            startActivity(intent);
+                                            return true;
+                                        }
+                                    });
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+
+                                }
+                            }
+                    );
         }
     }
 
