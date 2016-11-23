@@ -18,13 +18,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.wang.avi.AVLoadingIndicatorView;
 
 public class MainActivity extends AppCompatActivity {
 
     private EditText editTextSearch;
     private Button buttonSearch;
     private TextView textViewLatLon;
-    private ProgressBar progressBar;
+    private AVLoadingIndicatorView loading;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         editTextSearch = (EditText) findViewById(R.id.editText_search);
         buttonSearch = (Button) findViewById(R.id.button_search);
         textViewLatLon = (TextView) findViewById(R.id.textView_latlon);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        loading = (AVLoadingIndicatorView) findViewById(R.id.loading);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 if (searchQuery.isEmpty()) {
                     searchQuery = "beer";
                 }
-                progressBar.setVisibility(View.VISIBLE);
+                loading.setVisibility(View.VISIBLE);
                 if (!latitude.isEmpty() && !longitude.isEmpty()) {
                     startMapActivity();
                 } else {
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startMapActivity() {
         clicked = false;
-        progressBar.setVisibility(View.GONE);
+        loading.setVisibility(View.GONE);
         Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("latitude", latitude);
         intent.putExtra("longitude", longitude);
