@@ -1,6 +1,7 @@
 package com.koltinjo.pureagency_android_test;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +43,7 @@ public class BarAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View customView = inflater.inflate(R.layout.item, parent, false);
 
@@ -54,30 +55,21 @@ public class BarAdapter extends BaseAdapter {
         textViewName.setText(bars.get(position).getName());
         textViewAddress.setText(bars.get(position).getAddress());
 
+        customView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(parent.getContext(), MarkerActivity.class);
+                intent.putExtra("name", bars.get(position).getName());
+                intent.putExtra("address", bars.get(position).getAddress());
+                intent.putExtra("phone", bars.get(position).getPhone());
+                intent.putExtra("url", bars.get(position).getUrl());
+                intent.putExtra("checkins", bars.get(position).getCheckins());
+                intent.putExtra("herenow", bars.get(position).getHereNow());
+                parent.getContext().startActivity(intent);
+            }
+        });
+
         return customView;
     }
 
-//    private ArrayList<Bar> bars;
-//
-//    public BarAdapter(Context context, @LayoutRes int resource, ArrayList<Bar> bars) {
-//        super(context, resource);
-//        this.bars = bars;
-//    }
-//
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        Log.d("oiram", "list" + position);
-//        LayoutInflater inflater = LayoutInflater.from(getContext());
-//        View customView = inflater.inflate(R.layout.item, parent, false);
-//
-//        ImageView imageView = (ImageView) customView.findViewById(R.id.imageView);
-//        TextView textViewName = (TextView) customView.findViewById(R.id.textViewBarName);
-//        TextView textViewAddress = (TextView) customView.findViewById(R.id.textViewBarAddress);
-//
-//        Glide.with(parent.getContext()).load(bars.get(position).getImage()).fitCenter().into(imageView);
-//        textViewName.setText(bars.get(position).getName());
-//        textViewAddress.setText(bars.get(position).getAddress());
-//
-//        return customView;
-//    }
 }

@@ -9,6 +9,10 @@ public class Bar {
     private String name;
     private String address;
     private String image;
+    private String phone;
+    private String url;
+    private String checkins;
+    private String hereNow;
     private double latitude;
     private double longitude;
 
@@ -16,10 +20,14 @@ public class Bar {
 
     }
 
-    public Bar(String name, String address, String image, double latitude, double longitude) {
+    public Bar(String name, String address, String image, String phone, String url, String checkins, String hereNow, double latitude, double longitude) {
         this.name = name;
         this.address = address;
         this.image = image;
+        this.phone = phone;
+        this.url = url;
+        this.checkins = checkins;
+        this.hereNow = hereNow;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -62,6 +70,38 @@ public class Bar {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getCheckins() {
+        return checkins;
+    }
+
+    public void setCheckins(String checkins) {
+        this.checkins = checkins;
+    }
+
+    public String getHereNow() {
+        return hereNow;
+    }
+
+    public void setHereNow(String hereNow) {
+        this.hereNow = hereNow;
     }
 
 }

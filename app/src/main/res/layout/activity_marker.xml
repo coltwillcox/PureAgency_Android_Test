@@ -17,4 +17,45 @@
             android:id="@+id/textView_name"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            android:id="@+id/textView_address"
+            android:layout_below="@+id/textView_name"
+            android:layout_centerHorizontal="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone"
+            android:id="@+id/textView_phone"
+            android:layout_below="@+id/textView_address"
+            android:layout_centerHorizontal="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Url"
+            android:id="@+id/textView_url"
+            android:layout_below="@+id/textView_phone"
+            android:layout_centerHorizontal="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Checkins"
+            android:id="@+id/textView_checkins"
+            android:layout_below="@+id/textView_url"
+            android:layout_centerHorizontal="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Here now"
+            android:id="@+id/textView_herenow"
+            android:layout_below="@+id/textView_checkins"
+            android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

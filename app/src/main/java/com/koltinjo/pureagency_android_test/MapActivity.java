@@ -149,9 +149,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 String prefix = icon.getString("prefix");
                 String suffix = icon.getString("suffix");
                 String image = prefix + "64" + suffix;
+                String phone = venue.getJSONObject("contact").getString("formattedPhone");
+                String url = venue.getString("url");
+                String checkins = venue.getJSONObject("stats").getString("checkinsCount");
+                String hereNow = venue.getJSONObject("hereNow").getString("count");
+
                 double latitude = venue.getJSONObject("location").getDouble("lat");
                 double longitude = venue.getJSONObject("location").getDouble("lng");
-                bars.add(new Bar(name, address, image, latitude, longitude));
+                bars.add(new Bar(name, address, image, phone, url, checkins, hereNow, latitude, longitude));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -165,15 +170,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     private void addMarkers() {
-        for (Bar bar : bars) {
+        for (final Bar bar : bars) {
             LatLng marker = new LatLng(bar.getLatitude(), bar.getLongitude());
-            map.addMarker(new MarkerOptions().position(marker).title(bar.getName()));
+            map.addMarker(new MarkerOptions().position(marker).title(bar.getName())).setTag(bar);
             map.moveCamera(CameraUpdateFactory.newLatLng(marker));
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
                     Intent intent = new Intent(MapActivity.this, MarkerActivity.class);
-                    intent.putExtra("name", marker.getTitle());
+                    intent.putExtra("name", ((Bar) marker.getTag()).getName());
+                    intent.putExtra("address", ((Bar) marker.getTag()).getAddress());
+                    intent.putExtra("phone", ((Bar) marker.getTag()).getPhone());
+                    intent.putExtra("url", ((Bar) marker.getTag()).getUrl());
+                    intent.putExtra("checkins", ((Bar) marker.getTag()).getCheckins());
+                    intent.putExtra("herenow", ((Bar) marker.getTag()).getHereNow());
                     startActivity(intent);
                     return true;
                 }
