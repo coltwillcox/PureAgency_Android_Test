@@ -171,15 +171,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         downloadData();
     }
 
     private void addMarkers() {
         for (final Bar bar : bars) {
+
             final String image = bar.getImage();
             final String name = bar.getName();
             final double latitude = bar.getLatitude();
             final double longitude = bar.getLongitude();
+
             Single
                     .create(new Single.OnSubscribe<SingleSubscriber>() {
                         @Override
@@ -218,9 +221,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                                     Bitmap bitmap = (Bitmap) o;
                                     LatLng marker = new LatLng(latitude, longitude);
                                     Log.d("oiram", "add");
-                                    map.addMarker(new MarkerOptions().position(marker).title(name).icon(
-                                            BitmapDescriptorFactory.fromBitmap(bitmap)
-                                    )).setTag(bar);
+                                    map.addMarker(
+                                            new MarkerOptions()
+                                                    .position(marker)
+                                                    .title(name)
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                    ).setTag(bar);
 
                                     map.moveCamera(CameraUpdateFactory.newLatLng(marker));
                                     map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
