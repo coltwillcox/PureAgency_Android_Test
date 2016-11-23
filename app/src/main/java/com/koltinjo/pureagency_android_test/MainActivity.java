@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +25,17 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextSearch;
     private Button buttonSearch;
     private TextView textViewLatLon;
+    private ProgressBar progressBar;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
     // TODO Make them empty. Just for debug.
-    private String latitude = "40.703321957188955";
-    private String longitude = "-73.99287114236125";
+//    private String latitude = "40.703321957188955";
+//    private String longitude = "-73.99287114236125";
+    private String latitude = "";
+    private String longitude = "";
+
+    private boolean clicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         editTextSearch = (EditText) findViewById(R.id.editText_search);
         buttonSearch = (Button) findViewById(R.id.button_search);
         textViewLatLon = (TextView) findViewById(R.id.textView_latlon);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -47,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 latitude = String.valueOf(location.getLatitude());
                 longitude = String.valueOf(location.getLongitude());
                 textViewLatLon.setText(latitude + " - " + longitude);
+                if (clicked) {
+                    startMapActivity();
+                }
             }
 
             @Override
@@ -96,10 +106,12 @@ public class MainActivity extends AppCompatActivity {
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clicked = true;
                 String searchQuery = editTextSearch.getText().toString().trim();
                 if (searchQuery.isEmpty()) {
                     searchQuery = "beer";
                 }
+                progressBar.setVisibility(View.VISIBLE);
                 if (!latitude.isEmpty() && !longitude.isEmpty()) {
                     startMapActivity();
                 } else {
@@ -110,12 +122,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startMapActivity() {
+        progressBar.setVisibility(View.GONE);
         Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("latitude", latitude);
         intent.putExtra("longitude", longitude);
         startActivity(intent);
     }
-
-
 
 }
