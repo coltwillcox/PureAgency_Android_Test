@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startMapActivity() {
+        clicked = false;
         progressBar.setVisibility(View.GONE);
         Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("latitude", latitude);
