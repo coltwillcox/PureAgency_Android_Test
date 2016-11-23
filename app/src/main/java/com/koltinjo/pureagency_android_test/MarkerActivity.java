@@ -39,12 +39,12 @@ public class MarkerActivity extends AppCompatActivity {
         textViewCheckins = (TextView) findViewById(R.id.textView_checkins);
         textViewHereNow = (TextView) findViewById(R.id.textView_herenow);
 
-        textViewName.setText(name);
-        textViewAddress.setText(address);
-        textViewPhone.setText(phone);
+        textViewName.append(name);
+        textViewAddress.append(address);
+        textViewPhone.append(phone);
         textViewUrl.setText(url);
-        textViewCheckins.setText(checkins);
-        textViewHereNow.setText(herenow);
+        textViewCheckins.append(checkins);
+        textViewHereNow.append(herenow);
     }
 
 }
