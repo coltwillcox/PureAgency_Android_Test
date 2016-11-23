@@ -3,6 +3,7 @@ package com.koltinjo.pureagency_android_test;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -65,7 +66,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         Date cDate = new Date();
                         String urlDate = new SimpleDateFormat("yyyyMMdd").format(cDate);
                         String urlFull = urlStart + urlDate;
-
                         try {
                             // Step 1: Get XML document.
                             url = new URL(urlFull);
@@ -98,8 +98,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                             if (connection != null) {
                                 connection.disconnect();
                             }
+                            singleSubscriber.onSuccess(new Object());
                         }
-                        singleSubscriber.onSuccess(new Object());
                     }
                 })
                 .subscribeOn(Schedulers.newThread())
@@ -139,6 +139,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
         downloadData();
     }
 
@@ -146,7 +147,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         for (Bar bar : bars) {
             LatLng marker = new LatLng(bar.getLatitude(), bar.getLongitude());
             map.addMarker(new MarkerOptions().position(marker).title(bar.getName()));
-            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             map.moveCamera(CameraUpdateFactory.newLatLng(marker));
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override

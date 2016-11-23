@@ -7,32 +7,17 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.w3c.dom.Document;
-import rx.Single;
-import rx.SingleSubscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private String latitude = "";
-    private String longitude = "";
+    // TODO Make them empty. Just for debug.
+    private String latitude = "40.703321957188955";
+    private String longitude = "-73.99287114236125";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 if (searchQuery.isEmpty()) {
                     searchQuery = "beer";
                 }
-                Log.d("oiram", searchQuery);
                 if (!latitude.isEmpty() && !longitude.isEmpty()) {
                     startMapActivity();
                 } else {
